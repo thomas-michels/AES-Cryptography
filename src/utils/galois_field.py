@@ -57,7 +57,7 @@ class GaloisField:
         second_term = self.l_table[less_significant_char[0]][less_significant_char[1]]
         
         result = hex(int(first_term, 16) + int(second_term, 16))
-        result = result.replace("0x", "").upper()
+        result = result.replace("0x", "").upper().zfill(2)
         if int(result, 16) > int("FF", 16):
             result = "FF"
             

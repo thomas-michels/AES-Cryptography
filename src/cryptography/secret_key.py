@@ -1,3 +1,6 @@
+from typing import List
+
+
 class SecretKey:
 
     __key: bytes
@@ -10,8 +13,8 @@ class SecretKey:
     def __calculate_key_size(self) -> None:
         self.__size = len(self.__key) * 8
 
-    def get_key(self) -> str:
-        return self.__key.hex(",")
+    def get_key(self) -> List:
+        return self.__key.hex(",").split(",")
 
     def get_size_in_bits(self) -> int:
         return self.__size
