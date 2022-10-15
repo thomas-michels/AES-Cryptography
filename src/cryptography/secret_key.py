@@ -10,8 +10,8 @@ class SecretKey:
     def __calculate_key_size(self) -> None:
         self.__size = len(self.__key) * 8
 
-    def get_key(self) -> bytes:
-        return self.__key
+    def get_key(self) -> str:
+        return self.__key.hex(",")
 
     def get_size_in_bits(self) -> int:
         return self.__size
