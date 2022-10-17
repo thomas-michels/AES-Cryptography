@@ -21,4 +21,4 @@ class SBox:
     }
 
     def get_hex(self, line: str, column: str) -> str:
-        return self.table[line.upper()][column.upper()]
+        return self.table[line.upper()][column.upper()].upper()

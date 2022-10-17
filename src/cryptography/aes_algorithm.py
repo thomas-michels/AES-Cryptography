@@ -37,44 +37,56 @@ class AESAlgorithm(CryptoAlgorithm):
         for block in blocks:
             start = 0
             end = 4
-
+            print(f"chaves atuais: {start} - {end}")
             # etapa 1 criptografia
             round_keys = self.__key_schedule[start:end]
 
-            xor_block = []
-            for i in range(4):
-                xor_block.append(self.__complete_xor(block[i], round_keys[i]))
+            A = []
+            for j in range(4):
+                A.append(self.__complete_xor(block[j], round_keys[j]))
 
-            for i in range(10):
-
-                round_keys = self.__key_schedule[start:end]
-
+            for i in range(1, 10):
                 # etapa 2 criptografia
-                sub_words = []
-                for word in xor_block:
-                    sub_words.append(self.__sub_bytes(word))
+                B = []
+                for word in A:
+                    B.append(self.__sub_bytes(word))
 
                 # etapa 3 criptografia até aqui ta certo 100%
-                result = self.__shift_rows(sub_words)
+                C = self.__shift_rows(B)
 
                 # etapa 4 criptografia
-                if i != 9:
-                    result = self.__mix_columns(result)
+                D = self.__mix_columns(C)
                 
                 # etapa 5 criptografia
 
-                add_round_key = []
-                for i in range(4):
-                    add_round_key.append(self.__complete_xor(result[i], round_keys[i]))
-
-                xor_block = add_round_key
-
+                A = []
                 start += 4
                 end += 4
+                print(f"chaves da rodada - {i}: {start} - {end}")
+                round_keys = self.__key_schedule[start:end]
 
-            print(f"XOR BLOCK - {count}: {xor_block}")
+                for k in range(4):
+                    A.append(self.__complete_xor(D[k], round_keys[k]))
+
+                print(f"i: {i}")
+            
+            # etapa 2 criptografia
+            B = []
+            for word in A:
+                B.append(self.__sub_bytes(word))
+
+            # etapa 3 criptografia até aqui ta certo 100%
+            C = self.__shift_rows(B)
+
+            # etapa 5 criptografia
+            A = []
+            round_keys = self.__key_schedule[40:44]
+            for l in range(4):
+                A.append(self.__complete_xor(C[l], round_keys[l]))
+
+            print(f"XOR BLOCK - {count}: {A}")
             count += 1
-            blocks_encrypted.append(xor_block)
+            blocks_encrypted.append(A)
 
         result = self.__export_blocks(blocks_encrypted)
         return result
@@ -99,15 +111,15 @@ class AESAlgorithm(CryptoAlgorithm):
         return mixed_columns
 
     def __xor_mix_columns(self, shited_row: List[str], m1, m2, m3, m4) -> str:
-        first_term = self.__galois_field.multiply(shited_row[0], m1)
-        second_term = self.__galois_field.multiply(shited_row[1], m2)
-        third_term = self.__galois_field.multiply(shited_row[2], m3)
-        fourth_term = self.__galois_field.multiply(shited_row[2], m4)
+        first_term = self.__galois_field.multiply(shited_row[0], m1) # 7D
+        second_term = self.__galois_field.multiply(shited_row[1], m2) # 7B
+        third_term = self.__galois_field.multiply(shited_row[2], m3) # 63
+        fourth_term = self.__galois_field.multiply(shited_row[3], m4) # F8
 
         first_xor = hex(int(first_term, 16) ^ int(second_term, 16)).replace("0x", "").zfill(2)
-        second_xor = hex(int(first_xor, 16) ^ int(third_term, 16)).replace("0x", "").zfill(2)
-        third_xor = hex(int(second_xor, 16) ^ int(fourth_term, 16)).replace("0x", "").zfill(2)
-        return third_xor
+        second_xor = hex(int(third_term, 16) ^ int(fourth_term, 16)).replace("0x", "").zfill(2)
+        third_xor = hex(int(first_xor, 16) ^ int(second_xor, 16)).replace("0x", "").zfill(2)
+        return third_xor # 9D
 
     def __shift_rows(self, sub_words: List[str]) -> List[str]:
         shifted_rows = [[], [], [], []]
