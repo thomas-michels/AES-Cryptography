@@ -7,13 +7,11 @@ from src.utils import CipherMode, GaloisField, SBox
 class AESAlgorithm(CryptoAlgorithm):
 
     __key: SecretKey
-    __mode: CipherMode
     __key_schedule = []
     __state = [[], [], [], []]
     __galois_field: GaloisField
     __sbox: SBox
     __rcon: List[str] = ["01", "02", "04", "08", "10", "20", "40", "80", "1B", "36"]
-    __multiply_matrix: List[int] = [[2, 1, 1, 3], [3, 2, 1, 1], [1, 3, 2, 1], [1, 1, 3, 2]]
 
     def __init__(self, mode: CipherMode, key: SecretKey) -> None:
         self.__key = key
@@ -33,8 +31,8 @@ class AESAlgorithm(CryptoAlgorithm):
 
     def encrypt(self, text: bytes) -> bytes:
         blocks = self.__get_blocks(text)
-        result = ""
         count = 1
+        blocks_encrypted = []
 
         for block in blocks:
             start = 0
@@ -76,6 +74,19 @@ class AESAlgorithm(CryptoAlgorithm):
 
             print(f"XOR BLOCK - {count}: {xor_block}")
             count += 1
+            blocks_encrypted.append(xor_block)
+
+        result = self.__export_blocks(blocks_encrypted)
+        return result
+
+    def __export_blocks(self, blocks: List[List[str]]) -> str:
+        result = ""
+        for block in blocks:
+            for i in range(4):
+                for j in range(4):
+                    result += f"{block[j][i]}"
+
+        return result
 
     def __mix_columns(self, shifted_rows: List) -> List[List[str]]:
         mixed_columns = [[], [], [], []]
