@@ -5,7 +5,7 @@ def pkcs7(text: bytes, block_size: int) -> bytes:
     return text + bytes(padding, "utf-8")
 
 
-def unpad_pkcs7(text: bytes, block_size: int) -> str:
+def unpad_pkcs7(text: bytes) -> str:
     qtd_bytes = bytearray(text)[-1]
     padding = qtd_bytes * chr(qtd_bytes)
     return text[:len(padding)* -1]

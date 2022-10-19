@@ -93,7 +93,10 @@ class AESAlgorithm(CryptoAlgorithm):
             for i in range(4):
                 for j in range(4):
                     result += f"{block[i][j]}"
-
+                    if not (i == 3 and j == 3):
+                        result += " "
+            result += " "
+            
         return result
 
     def __mix_columns(self, shifted_rows: List) -> List[List[str]]:
