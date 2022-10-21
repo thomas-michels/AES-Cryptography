@@ -1,3 +1,5 @@
+# Feito por Thomas Michels Rodrigues e Gabriel Dallarosa
+
 from src import Application
 
 if __name__ == "__main__":

@@ -1,3 +1,5 @@
+# Feito por Thomas Michels Rodrigues e Gabriel Dallarosa
+
 from typing import List
 from .base_crypto_algorithm import CryptoAlgorithm
 from .secret_key import SecretKey
