@@ -80,7 +80,7 @@ class AESAlgorithm(CryptoAlgorithm):
             for l in range(4):
                 A.append(self.__complete_xor(C[l], round_keys[l]))
 
-            print(f"XOR BLOCK - {count}: {A}")
+            print(f"BLOCK - {count}: {A}")
             count += 1
             blocks_encrypted.append(A)
 

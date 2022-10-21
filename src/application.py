@@ -6,24 +6,24 @@ from Crypto.Cipher import AES
 
 
 class Application:
-    def run(self):
-        secret_key = SecretKeyAdapter.from_string("20,1,94,33,199,0,48,9,31,94,112,40,59,30,100,248")
+    def run(self, key, entrance_data_file, exit_data_file):
+        secret_key = SecretKeyAdapter.from_string(key)
 
         lib_aes_descryptograph = AES.new(secret_key.get_key_in_bytes(), AES.MODE_ECB)
 
         # Encrypt
         aes = AESAlgorithm(CipherMode.ECB_MODE, secret_key)
-        text = read_file("teste.txt")
+        text = read_file(entrance_data_file)
 
         pad = pkcs7(text, 16)
 
         encrypted = aes.encrypt(pad)
 
-        save_file("teste-encrypt", ".txt", encrypted, "w")
+        save_file(exit_data_file, encrypted, "w")
 
         # Decrypt - prova real
         decrypting = lib_aes_descryptograph.decrypt(bytes.fromhex(encrypted))
 
         unpad = unpad_pkcs7(decrypting)
 
-        save_file("teste-decrypt", ".txt", unpad, "wb")
+        save_file("decrypted-" + exit_data_file, unpad, "wb")

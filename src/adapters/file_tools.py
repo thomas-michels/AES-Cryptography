@@ -7,9 +7,9 @@ def read_file(path: str) -> bytes:
         return lines
 
 
-def save_file(name: str, type: str, content, mode="wb"):
-    print(f"Salvando o arquivo {name + type}")
-    with open(name + type, mode) as file:
+def save_file(name: str, content, mode="wb"):
+    print(f"Salvando o arquivo {name}")
+    with open(name, mode) as file:
         file.write(content)
 
     print("Arquivo salvo")
